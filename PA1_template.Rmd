@@ -5,6 +5,11 @@ output:
     keep_md: true
 ---
 
+I will use `ggplot2` for all graphs
+```{r, echo = TRUE}
+library(ggplot2)
+```
+
 ## Loading and preprocessing the data
 
 Read the data from the file `activity.csv` and convert the 2nd column to the Date format
@@ -17,7 +22,6 @@ data[,2] <- as.Date(data[,2], "%Y-%m-%d")
 
 ### The histogram of the total number of steps taken each day
 ```{r, echo = TRUE}
-library(ggplot2)
 ggplot(na.omit(data), aes(x=date, y=steps)) + geom_bar(stat='identity')
 ```
 
@@ -32,7 +36,17 @@ merge(mean, median)
 
 ## What is the average daily activity pattern?
 
+### The time series plot the 5-minute interval and the average number of steps taken across all days
+```{r, echo = TRUE}
+ggplot(na.omit(data), aes(x=interval, y=steps)) + stat_summary(fun.y="mean", geom="line")
+```
 
+### 5-minute interval that contains the maximum number of steps on average across all the days
+```{r, echo = TRUE}
+average <- with(data, aggregate(steps, list(interval), mean, na.rm = TRUE))
+names(average) <- c("interval", "steps")
+average[which.max(average[,2]),]
+```
 
 ## Imputing missing values
 
