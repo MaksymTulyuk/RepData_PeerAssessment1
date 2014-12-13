@@ -72,20 +72,20 @@ data[,2] &lt;- as.Date(data[,2], &quot;%Y-%m-%d&quot;)</code></pre>
 </div>
 <div id="the-mean-and-median-total-number-of-steps-taken-per-day" class="section level3">
 <h3>The <strong>mean</strong> and <strong>median</strong> total number of steps taken per day</h3>
-<pre class="r"><code>mean &lt;- with(data, aggregate(steps, list(date), mean))
+<pre class="r"><code>mean &lt;- with(data, aggregate(steps, list(date), mean, na.rm = TRUE))
 names(mean) &lt;- c(&quot;date&quot;, &quot;mean&quot;)
-median &lt;- with(data, aggregate(steps, list(date), median))
+median &lt;- with(data, aggregate(steps, list(date), median, na.rm = TRUE))
 names(median) &lt;- c(&quot;date&quot;, &quot;median&quot;)
 merge(mean, median)</code></pre>
 <pre><code>##          date       mean median
-## 1  2012-10-01         NA     NA
+## 1  2012-10-01        NaN     NA
 ## 2  2012-10-02  0.4375000      0
 ## 3  2012-10-03 39.4166667      0
 ## 4  2012-10-04 42.0694444      0
 ## 5  2012-10-05 46.1597222      0
 ## 6  2012-10-06 53.5416667      0
 ## 7  2012-10-07 38.2465278      0
-## 8  2012-10-08         NA     NA
+## 8  2012-10-08        NaN     NA
 ## 9  2012-10-09 44.4826389      0
 ## 10 2012-10-10 34.3750000      0
 ## 11 2012-10-11 35.7777778      0
@@ -109,20 +109,20 @@ merge(mean, median)</code></pre>
 ## 29 2012-10-29 17.4236111      0
 ## 30 2012-10-30 34.0937500      0
 ## 31 2012-10-31 53.5208333      0
-## 32 2012-11-01         NA     NA
+## 32 2012-11-01        NaN     NA
 ## 33 2012-11-02 36.8055556      0
 ## 34 2012-11-03 36.7048611      0
-## 35 2012-11-04         NA     NA
+## 35 2012-11-04        NaN     NA
 ## 36 2012-11-05 36.2465278      0
 ## 37 2012-11-06 28.9375000      0
 ## 38 2012-11-07 44.7326389      0
 ## 39 2012-11-08 11.1770833      0
-## 40 2012-11-09         NA     NA
-## 41 2012-11-10         NA     NA
+## 40 2012-11-09        NaN     NA
+## 41 2012-11-10        NaN     NA
 ## 42 2012-11-11 43.7777778      0
 ## 43 2012-11-12 37.3784722      0
 ## 44 2012-11-13 25.4722222      0
-## 45 2012-11-14         NA     NA
+## 45 2012-11-14        NaN     NA
 ## 46 2012-11-15  0.1423611      0
 ## 47 2012-11-16 18.8923611      0
 ## 48 2012-11-17 49.7881944      0
@@ -138,7 +138,7 @@ merge(mean, median)</code></pre>
 ## 58 2012-11-27 47.3819444      0
 ## 59 2012-11-28 35.3576389      0
 ## 60 2012-11-29 24.4687500      0
-## 61 2012-11-30         NA     NA</code></pre>
+## 61 2012-11-30        NaN     NA</code></pre>
 </div>
 </div>
 <div id="what-is-the-average-daily-activity-pattern" class="section level2">
@@ -159,6 +159,22 @@ average[which.max(average[,2]),]</code></pre>
 </div>
 <div id="imputing-missing-values" class="section level2">
 <h2>Imputing missing values</h2>
+<div id="the-total-number-of-missing-values-in-the-dataset" class="section level3">
+<h3>The total number of missing values in the dataset</h3>
+<pre class="r"><code>summary(is.na(data))</code></pre>
+<pre><code>##    steps            date          interval      
+##  Mode :logical   Mode :logical   Mode :logical  
+##  FALSE:15264     FALSE:17568     FALSE:17568    
+##  TRUE :2304      NA's :0         NA's :0        
+##  NA's :0</code></pre>
+</div>
+<div id="prepare-to-re-use-the-data-frame-mean-to-re-fill-the-values" class="section level3">
+<h3>Prepare to re-use the data frame <code>mean</code> to re-fill the values</h3>
+<pre class="r"><code>mean[is.na(mean[,2]), 2] &lt;- 0</code></pre>
+</div>
+<div id="create-a-dataset-equal-to-the-original-dataset-but-with-the-missing-data-filled-in" class="section level3">
+<h3>Create a dataset equal to the original dataset but with the missing data filled in</h3>
+</div>
 </div>
 <div id="are-there-differences-in-activity-patterns-between-weekdays-and-weekends" class="section level2">
 <h2>Are there differences in activity patterns between weekdays and weekends?</h2>

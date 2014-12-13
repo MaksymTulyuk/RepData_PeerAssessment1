@@ -28,23 +28,23 @@ ggplot(na.omit(data), aes(x=date, y=steps)) + geom_bar(stat='identity')
 ### The **mean** and **median** total number of steps taken per day
 
 ```r
-mean <- with(data, aggregate(steps, list(date), mean))
+mean <- with(data, aggregate(steps, list(date), mean, na.rm = TRUE))
 names(mean) <- c("date", "mean")
-median <- with(data, aggregate(steps, list(date), median))
+median <- with(data, aggregate(steps, list(date), median, na.rm = TRUE))
 names(median) <- c("date", "median")
 merge(mean, median)
 ```
 
 ```
 ##          date       mean median
-## 1  2012-10-01         NA     NA
+## 1  2012-10-01        NaN     NA
 ## 2  2012-10-02  0.4375000      0
 ## 3  2012-10-03 39.4166667      0
 ## 4  2012-10-04 42.0694444      0
 ## 5  2012-10-05 46.1597222      0
 ## 6  2012-10-06 53.5416667      0
 ## 7  2012-10-07 38.2465278      0
-## 8  2012-10-08         NA     NA
+## 8  2012-10-08        NaN     NA
 ## 9  2012-10-09 44.4826389      0
 ## 10 2012-10-10 34.3750000      0
 ## 11 2012-10-11 35.7777778      0
@@ -68,20 +68,20 @@ merge(mean, median)
 ## 29 2012-10-29 17.4236111      0
 ## 30 2012-10-30 34.0937500      0
 ## 31 2012-10-31 53.5208333      0
-## 32 2012-11-01         NA     NA
+## 32 2012-11-01        NaN     NA
 ## 33 2012-11-02 36.8055556      0
 ## 34 2012-11-03 36.7048611      0
-## 35 2012-11-04         NA     NA
+## 35 2012-11-04        NaN     NA
 ## 36 2012-11-05 36.2465278      0
 ## 37 2012-11-06 28.9375000      0
 ## 38 2012-11-07 44.7326389      0
 ## 39 2012-11-08 11.1770833      0
-## 40 2012-11-09         NA     NA
-## 41 2012-11-10         NA     NA
+## 40 2012-11-09        NaN     NA
+## 41 2012-11-10        NaN     NA
 ## 42 2012-11-11 43.7777778      0
 ## 43 2012-11-12 37.3784722      0
 ## 44 2012-11-13 25.4722222      0
-## 45 2012-11-14         NA     NA
+## 45 2012-11-14        NaN     NA
 ## 46 2012-11-15  0.1423611      0
 ## 47 2012-11-16 18.8923611      0
 ## 48 2012-11-17 49.7881944      0
@@ -97,7 +97,7 @@ merge(mean, median)
 ## 58 2012-11-27 47.3819444      0
 ## 59 2012-11-28 35.3576389      0
 ## 60 2012-11-29 24.4687500      0
-## 61 2012-11-30         NA     NA
+## 61 2012-11-30        NaN     NA
 ```
 
 ## What is the average daily activity pattern?
@@ -125,6 +125,27 @@ average[which.max(average[,2]),]
 
 ## Imputing missing values
 
+### The total number of missing values in the dataset
+
+```r
+summary(is.na(data))
+```
+
+```
+##    steps            date          interval      
+##  Mode :logical   Mode :logical   Mode :logical  
+##  FALSE:15264     FALSE:17568     FALSE:17568    
+##  TRUE :2304      NA's :0         NA's :0        
+##  NA's :0
+```
+
+### Prepare to re-use the data frame `mean` to re-fill the values
+
+```r
+mean[is.na(mean[,2]), 2] <- 0
+```
+
+### Create a dataset equal to the original dataset but with the missing data filled in
 
 
 ## Are there differences in activity patterns between weekdays and weekends?

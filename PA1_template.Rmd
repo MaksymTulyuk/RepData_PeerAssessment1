@@ -27,9 +27,9 @@ ggplot(na.omit(data), aes(x=date, y=steps)) + geom_bar(stat='identity')
 
 ### The **mean** and **median** total number of steps taken per day
 ```{r, echo = TRUE}
-mean <- with(data, aggregate(steps, list(date), mean))
+mean <- with(data, aggregate(steps, list(date), mean, na.rm = TRUE))
 names(mean) <- c("date", "mean")
-median <- with(data, aggregate(steps, list(date), median))
+median <- with(data, aggregate(steps, list(date), median, na.rm = TRUE))
 names(median) <- c("date", "median")
 merge(mean, median)
 ```
@@ -50,6 +50,19 @@ average[which.max(average[,2]),]
 
 ## Imputing missing values
 
+### The total number of missing values in the dataset
+```{r, echo = TRUE}
+summary(is.na(data))
+```
 
+### Prepare to re-use the data frame `mean` to re-fill the values
+```{r, echo = TRUE}
+mean[is.na(mean[,2]), 2] <- 0
+```
+
+### Create a dataset equal to the original dataset but with the missing data filled in
+```{r, echo = TRUE}
+
+```
 
 ## Are there differences in activity patterns between weekdays and weekends?
