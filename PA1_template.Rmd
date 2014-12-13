@@ -5,14 +5,30 @@ output:
     keep_md: true
 ---
 
-
 ## Loading and preprocessing the data
 
-
+Read the data from the file `activity.csv` and convert the 2nd column to the Date format
+```{r, echo = TRUE}
+data <- read.csv("activity.csv")
+data[,2] <- as.Date(data[,2], "%Y-%m-%d")
+```
 
 ## What is mean total number of steps taken per day?
 
+### The histogram of the total number of steps taken each day
+```{r, echo = TRUE}
+library(ggplot2)
+ggplot(na.omit(data), aes(x=date, y=steps)) + geom_bar(stat='identity')
+```
 
+### The **mean** and **median** total number of steps taken per day
+```{r, echo = TRUE}
+mean <- with(data, aggregate(steps, list(date), mean))
+names(mean) <- c("date", "mean")
+median <- with(data, aggregate(steps, list(date), median))
+names(median) <- c("date", "median")
+merge(mean, median)
+```
 
 ## What is the average daily activity pattern?
 
