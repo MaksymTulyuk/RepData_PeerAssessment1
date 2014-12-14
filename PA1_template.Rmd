@@ -20,18 +20,19 @@ data[,2] <- as.Date(data[,2], "%Y-%m-%d")
 
 ## What is mean total number of steps taken per day?
 
-### The histogram of the total number of steps taken each day
+### Draw a histogram of the total number of steps taken each day
 ```{r, echo = TRUE}
 ggplot(na.omit(data), aes(x=date, y=steps)) + geom_bar(stat='identity')
 ```
 
-### The **mean** and **median** total number of steps taken per day
+### Count the **mean** and **median** for total number of steps taken per day
 ```{r, echo = TRUE}
 mean <- with(data, aggregate(steps, list(date), mean, na.rm = TRUE))
 names(mean) <- c("date", "mean")
 median <- with(data, aggregate(steps, list(date), median, na.rm = TRUE))
 names(median) <- c("date", "median")
-merge(mean, median)
+mean_median <- merge(mean, median)
+mean_median
 ```
 
 ## What is the average daily activity pattern?
@@ -45,7 +46,6 @@ names(average) <- c("interval", "steps")
 ### The time series plot the 5-minute interval and the average number of steps taken across all days
 ```{r, echo = TRUE}
 ggplot(na.omit(data), aes(x=interval, y=steps)) + stat_summary(fun.y="mean", geom="line")
-#qplot(x=interval, y=steps, data = average, geom="line")
 ```
 
 ### 5-minute interval that contains the maximum number of steps on average across all the days
@@ -64,25 +64,53 @@ The total number of rows with NA is 2304
 
 ### Prepare to re-use the data frame mean to re-fill the values
 ```{r, echo = TRUE}
+data_without_na <- data
 mean[is.na(mean[,2]), 2] <- 0
 ```
 
-### Create a dataset equal to the original dataset but with the missing data filled in
+### Replace NA in the dataset with average per day
 ```{r, echo = TRUE}
-
+for (i in 1:length(data_without_na[ ,1])) {
+    if (is.na(data_without_na[i, 1])) {
+        data_without_na[i, 1] <- mean[mean$date == data_without_na[i, 2], 2]
+    }
+}
 ```
+
+### Re-draw a histogram of the total number of steps taken each day without NA
+```{r, echo = TRUE}
+ggplot(data_without_na, aes(x=date, y=steps)) + geom_bar(stat='identity')
+```
+
+### Re-count the **mean** and **median** for total number of steps taken per day without NA
+```{r, echo = TRUE}
+imputed_mean <- with(data_without_na, aggregate(steps, list(date), mean, na.rm = TRUE))
+names(imputed_mean) <- c("date", "imputed mean")
+imputed_median <- with(data_without_na, aggregate(steps, list(date), median, na.rm = TRUE))
+names(imputed_median) <- c("date", "imputed median")
+imputed_mean_median <- merge(imputed_mean, imputed_median)
+imputed_mean_median
+```
+
+### Compare mean and median before and after the imputing
+```{r, echo = TRUE}
+compare_mean_median <- merge(mean_median, imputed_mean_median)
+compare_mean_median <- compare_mean_median[,c(1, 2, 4, 3, 5)]
+compare_mean_median
+```
+
+The imputing the dataset has no impact on the results because NA in the dataset exists only for the whole day
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
 ### Add a factor variable indicating whether a given date is a weekday or weekend day
 ```{r, echo = TRUE}
-data$day <- "weekday"
-data[weekdays(data$date) == "Saturday" | weekdays(data$date) == "Sunday", "day"] <- "weekend"
-data$day <- as.factor(data$day)
+data_without_na$day <- "weekday"
+data_without_na[weekdays(data_without_na$date) == "Saturday" | weekdays(data_without_na$date) == "Sunday", "day"] <- "weekend"
+data_without_na$day <- as.factor(data_without_na$day)
 ```
 
-### Make a panel plot of the 5-minute interval (x-axis) and the average number of steps taken
-### averaged across all weekday days or weekend days (y-axis)
+### Make a panel plot of the 5-minute interval and the average number of steps taken averaged across all weekday days or weekend days
 ```{r, echo = TRUE}
-ggplot(na.omit(data), aes(x=interval, y=steps)) + facet_wrap(~ day, nrow = 2) + stat_summary(fun.y="mean", geom="line")
+ggplot(data_without_na, aes(x=interval, y=steps)) + facet_wrap(~ day, nrow = 2) + stat_summary(fun.y="mean", geom="line")
 ```
