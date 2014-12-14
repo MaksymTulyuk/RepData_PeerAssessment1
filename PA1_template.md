@@ -1,4 +1,9 @@
-# Reproducible Research: Peer Assessment 1
+---
+title: "Reproducible Research: Peer Assessment 1"
+output: 
+  html_document:
+    keep_md: true
+---
 
 I will use `ggplot2` for all graphs
 
@@ -23,7 +28,7 @@ data[,2] <- as.Date(data[,2], "%Y-%m-%d")
 ggplot(na.omit(data), aes(x=date, y=steps)) + geom_bar(stat='identity')
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
 
 ### Count the **mean** and **median** for total number of steps taken per day
 
@@ -116,7 +121,7 @@ names(average) <- c("interval", "steps")
 ggplot(na.omit(data), aes(x=interval, y=steps)) + stat_summary(fun.y="mean", geom="line")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
+![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6-1.png) 
 
 ### 5-minute interval that contains the maximum number of steps on average across all the days
 
@@ -170,7 +175,7 @@ for (i in 1:length(data_without_na[ ,1])) {
 ggplot(data_without_na, aes(x=date, y=steps)) + geom_bar(stat='identity')
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-11-1.png) 
+![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11-1.png) 
 
 ### Re-count the **mean** and **median** for total number of steps taken per day without NA
 
@@ -339,4 +344,4 @@ data_without_na$day <- as.factor(data_without_na$day)
 ggplot(data_without_na, aes(x=interval, y=steps)) + facet_wrap(~ day, nrow = 2) + stat_summary(fun.y="mean", geom="line")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-15-1.png) 
+![plot of chunk unnamed-chunk-15](figure/unnamed-chunk-15-1.png) 
