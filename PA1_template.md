@@ -132,7 +132,7 @@ The interval 835 has the maximum amount of step
 
 ## Imputing missing values
 
-### The total number of missing values in the dataset
+### Count the total number of missing values in the dataset
 
 ```r
 summary(is.na(data))
@@ -147,14 +147,14 @@ summary(is.na(data))
 ```
 The total number of rows with NA is 2304
 
-### Prepare to re-use the data frame mean to re-fill the values
+### Prepare to re-use the data frame *mean* to re-fill the values
 
 ```r
 data_without_na <- data
 mean[is.na(mean[,2]), 2] <- 0
 ```
 
-### Replace NA in the dataset with average per day
+### Replace NA in the dataset with mean/average per day
 
 ```r
 for (i in 1:length(data_without_na[ ,1])) {

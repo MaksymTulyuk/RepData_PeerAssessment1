@@ -164,8 +164,8 @@ names(average) &lt;- c(&quot;interval&quot;, &quot;steps&quot;)</code></pre>
 </div>
 <div id="imputing-missing-values" class="section level2">
 <h2>Imputing missing values</h2>
-<div id="the-total-number-of-missing-values-in-the-dataset" class="section level3">
-<h3>The total number of missing values in the dataset</h3>
+<div id="count-the-total-number-of-missing-values-in-the-dataset" class="section level3">
+<h3>Count the total number of missing values in the dataset</h3>
 <pre class="r"><code>summary(is.na(data))</code></pre>
 <pre><code>##    steps            date          interval      
 ##  Mode :logical   Mode :logical   Mode :logical  
@@ -175,12 +175,12 @@ names(average) &lt;- c(&quot;interval&quot;, &quot;steps&quot;)</code></pre>
 <p>The total number of rows with NA is 2304</p>
 </div>
 <div id="prepare-to-re-use-the-data-frame-mean-to-re-fill-the-values" class="section level3">
-<h3>Prepare to re-use the data frame mean to re-fill the values</h3>
+<h3>Prepare to re-use the data frame <em>mean</em> to re-fill the values</h3>
 <pre class="r"><code>data_without_na &lt;- data
 mean[is.na(mean[,2]), 2] &lt;- 0</code></pre>
 </div>
-<div id="replace-na-in-the-dataset-with-average-per-day" class="section level3">
-<h3>Replace NA in the dataset with average per day</h3>
+<div id="replace-na-in-the-dataset-with-meanaverage-per-day" class="section level3">
+<h3>Replace NA in the dataset with mean/average per day</h3>
 <pre class="r"><code>for (i in 1:length(data_without_na[ ,1])) {
     if (is.na(data_without_na[i, 1])) {
         data_without_na[i, 1] &lt;- mean[mean$date == data_without_na[i, 2], 2]
