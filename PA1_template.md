@@ -122,6 +122,7 @@ average[which.max(average[,2]),]
 ##     interval    steps
 ## 104      835 206.1698
 ```
+The interval 835 has the maximum amount of step
 
 ## Imputing missing values
 
@@ -138,6 +139,7 @@ summary(is.na(data))
 ##  TRUE :2304      NA's :0         NA's :0        
 ##  NA's :0
 ```
+The total number of rows with NA is 2304
 
 ### Prepare to re-use the data frame `mean` to re-fill the values
 

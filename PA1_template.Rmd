@@ -36,17 +36,23 @@ merge(mean, median)
 
 ## What is the average daily activity pattern?
 
+### Create a dataset  the average number of steps taken across all days on each 5 min interval
+```{r, echo = TRUE}
+average <- with(data, aggregate(steps, list(interval), mean, na.rm = TRUE))
+names(average) <- c("interval", "steps")
+```
+
 ### The time series plot the 5-minute interval and the average number of steps taken across all days
 ```{r, echo = TRUE}
 ggplot(na.omit(data), aes(x=interval, y=steps)) + stat_summary(fun.y="mean", geom="line")
+#qplot(x=interval, y=steps, data = average, geom="line")
 ```
 
 ### 5-minute interval that contains the maximum number of steps on average across all the days
 ```{r, echo = TRUE}
-average <- with(data, aggregate(steps, list(interval), mean, na.rm = TRUE))
-names(average) <- c("interval", "steps")
 average[which.max(average[,2]),]
 ```
+The interval 835 has the maximum amount of step
 
 ## Imputing missing values
 
@@ -54,8 +60,9 @@ average[which.max(average[,2]),]
 ```{r, echo = TRUE}
 summary(is.na(data))
 ```
+The total number of rows with NA is 2304
 
-### Prepare to re-use the data frame `mean` to re-fill the values
+### Prepare to re-use the data frame mean to re-fill the values
 ```{r, echo = TRUE}
 mean[is.na(mean[,2]), 2] <- 0
 ```
@@ -66,3 +73,16 @@ mean[is.na(mean[,2]), 2] <- 0
 ```
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+### Add a factor variable indicating whether a given date is a weekday or weekend day
+```{r, echo = TRUE}
+data$day <- "weekday"
+data[weekdays(data$date) == "Saturday" | weekdays(data$date) == "Sunday", "day"] <- "weekend"
+data$day <- as.factor(data$day)
+```
+
+### Make a panel plot of the 5-minute interval (x-axis) and the average number of steps taken
+### averaged across all weekday days or weekend days (y-axis)
+```{r, echo = TRUE}
+ggplot(na.omit(data), aes(x=interval, y=steps)) + facet_wrap(~ day, nrow = 2) + stat_summary(fun.y="mean", geom="line")
+```
